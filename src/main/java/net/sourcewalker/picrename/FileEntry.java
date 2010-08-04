@@ -10,10 +10,11 @@ public class FileEntry {
 
     public FileEntry(File source) {
         this.source = source;
-        this.description = filterName(source.getName());
+        this.description = removeExtension(source.getName());
+        description = FileNameFilter.filterName(description);
     }
 
-    private String filterName(String basename) {
+    private String removeExtension(String basename) {
         String[] tokens = basename.split("\\.");
         String name;
         if (tokens.length > 1) {
