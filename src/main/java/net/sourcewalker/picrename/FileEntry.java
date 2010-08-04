@@ -5,28 +5,14 @@ import java.io.File;
 public class FileEntry {
 
     private static final String DELIMITER = "_";
+
     private File source;
     private String description;
 
     public FileEntry(File source) {
         this.source = source;
-        this.description = removeExtension(source.getName());
+        this.description = FileNameTools.removeExtension(source.getName());
         description = FileNameFilter.filterName(description);
-    }
-
-    private String removeExtension(String basename) {
-        String[] tokens = basename.split("\\.");
-        String name;
-        if (tokens.length > 1) {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < tokens.length - 1; i++) {
-                sb.append(tokens[i]);
-            }
-            name = sb.toString();
-        } else {
-            name = tokens[0];
-        }
-        return name;
     }
 
     public File getSource() {
@@ -59,17 +45,8 @@ public class FileEntry {
             sb.append(DELIMITER);
             sb.append(description);
         }
-        sb.append(getExtension(source));
+        sb.append(FileNameTools.getExtension(source));
         return sb.toString();
-    }
-
-    private String getExtension(File file) {
-        String[] tokens = file.getName().split("\\.");
-        if (tokens.length > 1) {
-            return "." + tokens[tokens.length - 1];
-        } else {
-            return "";
-        }
     }
 
 }
