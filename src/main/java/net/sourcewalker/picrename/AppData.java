@@ -13,6 +13,7 @@ public class AppData implements TableModel {
     private List<TableModelListener> tableListeners;
     private List<FileEntry> files;
     private String prefix;
+    private int[] selection = new int[0];
 
     public AppData() {
         tableListeners = new ArrayList<TableModelListener>();
@@ -27,6 +28,14 @@ public class AppData implements TableModel {
     public void setPrefix(String value) {
         prefix = value;
         fireDataChanged();
+    }
+
+    public int[] getSelection() {
+        return selection;
+    }
+
+    public void setSelection(int[] value) {
+        selection = value;
     }
 
     @Override
@@ -150,6 +159,10 @@ public class AppData implements TableModel {
             }
         }
         return -1;
+    }
+
+    public void clearSelection() {
+        selection = new int[0];
     }
 
 }
