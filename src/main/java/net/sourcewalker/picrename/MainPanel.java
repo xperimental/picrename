@@ -25,6 +25,12 @@ public class MainPanel extends JPanel {
         toolBar = new JToolBar(JToolBar.HORIZONTAL);
         toolBar.add(actions.get("addFile"));
         toolBar.add(actions.get("addDirectory"));
+        toolBar.add(actions.get("clearList"));
+        toolBar.addSeparator();
+        toolBar.add(actions.get("moveTop"));
+        toolBar.add(actions.get("moveUp"));
+        toolBar.add(actions.get("moveDown"));
+        toolBar.add(actions.get("moveBottom"));
         toolBar.addSeparator();
         toolBar.add(new PrefixToolbarItem(data));
         add(toolBar, BorderLayout.NORTH);

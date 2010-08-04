@@ -124,4 +124,9 @@ public class AppData implements TableModel {
         return false;
     }
 
+    public void clear() {
+        files.clear();
+        fireDataChanged();
+    }
+
 }

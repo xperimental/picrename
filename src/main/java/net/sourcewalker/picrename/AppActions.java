@@ -50,4 +50,25 @@ public class AppActions {
         }
     }
 
+    @Action
+    public void clearList() {
+        data.clear();
+    }
+
+    @Action
+    public void moveTop() {
+    }
+
+    @Action
+    public void moveUp() {
+    }
+
+    @Action
+    public void moveDown() {
+    }
+
+    @Action
+    public void moveBottom() {
+    }
+
 }
