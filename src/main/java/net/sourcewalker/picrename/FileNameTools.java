@@ -20,7 +20,7 @@ public class FileNameTools {
     }
 
     static String getExtension(File file) {
-        String[] tokens = file.getName().split("\\.");
+        String[] tokens = file.getName().toLowerCase().split("\\.");
         if (tokens.length > 1) {
             return "." + tokens[tokens.length - 1];
         } else {
