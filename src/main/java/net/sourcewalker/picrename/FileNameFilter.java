@@ -9,7 +9,8 @@ public class FileNameFilter {
 
     static {
         FILTERS = new FileNameFilter[] { new FileNameFilter("^\\d+$", ""),
-                new FileNameFilter("DSC\\d+", "") };
+                new FileNameFilter("^DSC\\d+$", ""),
+                new FileNameFilter("^IMG_\\d+$", "") };
     }
 
     public static String filterName(String name) {
