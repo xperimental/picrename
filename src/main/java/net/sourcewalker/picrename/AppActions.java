@@ -33,7 +33,11 @@ public class AppActions {
     }
 
     private void addFile(File path) {
-        FileEntry entry = new FileEntry(path);
+        int id = data.getId(FileNameTools.removeExtension(path.getName()));
+        if (id == -1) {
+            id = data.nextId();
+        }
+        FileEntry entry = new FileEntry(id, path);
         data.addFileEntry(entry);
     }
 

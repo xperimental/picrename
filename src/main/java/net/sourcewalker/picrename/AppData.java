@@ -70,13 +70,13 @@ public class AppData implements TableModel {
         FileEntry entry = files.get(rowIndex);
         switch (columnIndex) {
         case 0:
-            return String.format("%03d", rowIndex);
+            return String.format("%03d", entry.getId());
         case 1:
             return entry.getDescription();
         case 2:
             return entry.getSourceBasename();
         case 3:
-            return entry.getTargetPath(prefix, rowIndex);
+            return entry.getTargetPath(prefix);
         default:
             return "INVALID";
         }
@@ -131,6 +131,25 @@ public class AppData implements TableModel {
     public void clear() {
         files.clear();
         fireDataChanged();
+    }
+
+    public int nextId() {
+        int maxId = 0;
+        for (FileEntry entry : files) {
+            maxId = Math.max(entry.getId(), maxId);
+        }
+        return maxId + 1;
+    }
+
+    public int getId(String searchName) {
+        for (FileEntry entry : files) {
+            String entryName = FileNameTools.removeExtension(entry
+                    .getSourceBasename());
+            if (entryName.equals(searchName)) {
+                return entry.getId();
+            }
+        }
+        return -1;
     }
 
 }

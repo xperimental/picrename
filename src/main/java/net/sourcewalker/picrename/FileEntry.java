@@ -6,13 +6,23 @@ public class FileEntry {
 
     private static final String DELIMITER = "_";
 
+    private int id;
     private File source;
     private String description;
 
-    public FileEntry(File source) {
+    public FileEntry(int id, File source) {
+        this.id = id;
         this.source = source;
         this.description = FileNameTools.removeExtension(source.getName());
         description = FileNameFilter.filterName(description);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int value) {
+        id = value;
     }
 
     public File getSource() {
@@ -31,7 +41,7 @@ public class FileEntry {
         this.description = description;
     }
 
-    public String getTargetPath(String prefix, int id) {
+    public String getTargetPath(String prefix) {
         File parent = source.getParentFile();
         StringBuilder sb = new StringBuilder();
         sb.append(parent.getAbsolutePath());
