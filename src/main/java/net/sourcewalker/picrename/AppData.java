@@ -2,6 +2,8 @@ package net.sourcewalker.picrename;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.event.TableModelEvent;
@@ -163,6 +165,21 @@ public class AppData implements TableModel {
 
     public void clearSelection() {
         selection = new int[0];
+    }
+
+    public FileEntry getEntry(int index) {
+        return files.get(index);
+    }
+
+    public void sortEntries() {
+        Collections.sort(files, new Comparator<FileEntry>() {
+
+            @Override
+            public int compare(FileEntry o1, FileEntry o2) {
+                return o1.getId() - o2.getId();
+            }
+        });
+        fireDataChanged();
     }
 
 }

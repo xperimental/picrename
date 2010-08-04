@@ -32,10 +32,8 @@ public class MainPanel extends JPanel implements ListSelectionListener {
         toolBar.add(actions.get("addDirectory"));
         toolBar.add(actions.get("clearList"));
         toolBar.addSeparator();
-        toolBar.add(actions.get("moveTop"));
-        toolBar.add(actions.get("moveUp"));
-        toolBar.add(actions.get("moveDown"));
-        toolBar.add(actions.get("moveBottom"));
+        toolBar.add(actions.get("increaseId"));
+        toolBar.add(actions.get("decreaseId"));
         toolBar.addSeparator();
         toolBar.add(new PrefixToolbarItem(data));
         add(toolBar, BorderLayout.NORTH);
@@ -44,7 +42,7 @@ public class MainPanel extends JPanel implements ListSelectionListener {
         fileTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         setMinWidths(fileTable.getColumnModel());
         fileTable
-                .setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+                .setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         fileTable.getSelectionModel().addListSelectionListener(this);
         JScrollPane scroller = new JScrollPane(fileTable,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,

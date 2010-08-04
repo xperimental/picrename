@@ -3,6 +3,9 @@ package net.sourcewalker.picrename;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.swing.JFileChooser;
 
@@ -59,20 +62,33 @@ public class AppActions {
         data.clear();
     }
 
-    @Action
-    public void moveTop() {
+    private Collection<FileEntry> getSelectedEntries() {
+        int[] selection = data.getSelection();
+        List<FileEntry> result = new ArrayList<FileEntry>();
+        for (int idx : selection) {
+            result.add(data.getEntry(idx));
+        }
+        return result;
     }
 
     @Action
-    public void moveUp() {
+    public void decreaseId() {
+        modifyId(-1);
+    }
+
+    private void modifyId(int byValue) {
+        Collection<FileEntry> entries = getSelectedEntries();
+        for (FileEntry entry : entries) {
+            if (entry.getId() + byValue > 0) {
+                entry.setId(entry.getId() + byValue);
+            }
+        }
+        data.sortEntries();
     }
 
     @Action
-    public void moveDown() {
-    }
-
-    @Action
-    public void moveBottom() {
+    public void increaseId() {
+        modifyId(1);
     }
 
 }
