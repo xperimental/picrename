@@ -33,6 +33,10 @@ public class FileEntry {
         return source;
     }
 
+    public String getSourceBasename() {
+        return source.getName();
+    }
+
     public String getDescription() {
         return description;
     }

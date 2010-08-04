@@ -13,7 +13,7 @@ import javax.swing.table.TableColumnModel;
 public class MainPanel extends JPanel {
 
     private static final long serialVersionUID = 2695052132894263047L;
-    private static final int[] MIN_WIDTHS = new int[] { 30, 150, 300 };
+    private static final int[] MIN_WIDTHS = new int[] { 30, 150, 150, 300 };
 
     private JTable fileTable;
     private JToolBar toolBar;

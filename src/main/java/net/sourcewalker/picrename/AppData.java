@@ -36,7 +36,7 @@ public class AppData implements TableModel {
 
     @Override
     public int getColumnCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -47,6 +47,8 @@ public class AppData implements TableModel {
         case 1:
             return "Description";
         case 2:
+            return "Source filename";
+        case 3:
             return "Target path";
         default:
             return "UNKNOWN";
@@ -72,6 +74,8 @@ public class AppData implements TableModel {
         case 1:
             return entry.getDescription();
         case 2:
+            return entry.getSourceBasename();
+        case 3:
             return entry.getTargetPath(prefix, rowIndex);
         default:
             return "INVALID";
