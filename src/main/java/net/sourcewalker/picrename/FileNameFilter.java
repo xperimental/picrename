@@ -11,7 +11,7 @@ public class FileNameFilter {
         FILTERS = new FileNameFilter[] { new FileNameFilter("^\\d+$", ""),
                 new FileNameFilter("^DSC\\d+$", ""),
                 new FileNameFilter("^IMG_\\d+$", ""),
-                new FileNameFilter("([^_]+_)?\\d{3}_?", "") };
+                new FileNameFilter("([^_]+_)?\\d{3}(_|$)", "") };
     }
 
     public static String filterName(String name) {
