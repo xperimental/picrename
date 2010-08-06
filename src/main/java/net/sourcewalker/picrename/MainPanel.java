@@ -30,6 +30,7 @@ public class MainPanel extends JPanel {
         add(toolBar, BorderLayout.NORTH);
 
         fileTable = new JTable(data);
+        fileTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         setMinWidths(fileTable.getColumnModel());
         JScrollPane scroller = new JScrollPane(fileTable,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
