@@ -2,6 +2,8 @@ package net.sourcewalker.picrename;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +15,13 @@ import org.jdesktop.application.Action;
 public class AppActions {
 
     private final AppData data;
+    private PropertyChangeSupport propSupport = new PropertyChangeSupport(this);
 
     public AppActions(AppData data) {
         this.data = data;
+
+    public void addPropertyChangeListener(PropertyChangeListener l) {
+        propSupport.addPropertyChangeListener(l);
     }
 
     @Action
@@ -41,6 +47,7 @@ public class AppActions {
         }
         FileEntry entry = new FileEntry(data, id, path);
         data.addFileEntry(entry);
+        propSupport.firePropertyChange("listNotEmpty", false, true);
     }
 
     @Action
@@ -56,9 +63,10 @@ public class AppActions {
         }
     }
 
-    @Action
+    @Action(enabledProperty = "listNotEmpty")
     public void clearList() {
         data.clear();
+        propSupport.firePropertyChange("listNotEmpty", true, false);
     }
 
     private List<FileEntry> getSelectedEntries() {
@@ -70,7 +78,7 @@ public class AppActions {
         return result;
     }
 
-    @Action
+    @Action(enabledProperty = "listNotEmpty")
     public void decreaseId() {
         modifyId(-1);
     }
@@ -90,15 +98,19 @@ public class AppActions {
         data.setSelection(indexes);
     }
 
-    @Action
+    @Action(enabledProperty = "listNotEmpty")
     public void increaseId() {
         modifyId(1);
     }
 
-    @Action
+    @Action(enabledProperty = "listNotEmpty")
     public void orderByDate() {
         data.clearSelection();
         data.orderByDate();
+    }
+
+    public boolean isListNotEmpty() {
+        return data.getRowCount() > 0;
     }
 
 }
