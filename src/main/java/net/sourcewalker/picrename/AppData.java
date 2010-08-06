@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.event.TableModelEvent;
@@ -203,6 +204,42 @@ public class AppData implements TableModel {
 
     public int getIndex(FileEntry search) {
         return files.indexOf(search);
+    }
+
+    public void orderByDate() {
+        Collections.sort(files, new Comparator<FileEntry>() {
+
+            @Override
+            public int compare(FileEntry o1, FileEntry o2) {
+                Date d1 = o1.getDateTaken();
+                Date d2 = o2.getDateTaken();
+                if (d1 != null) {
+                    if (d2 != null) {
+                        return d1.compareTo(d2);
+                    } else {
+                        return 1;
+                    }
+                } else {
+                    return -1;
+                }
+            }
+        });
+        initIDsFromOrder();
+        fireDataChanged();
+    }
+
+    private void initIDsFromOrder() {
+        int id = 0;
+        String lastName = "-DUMMY-";
+        for (FileEntry entry : files) {
+            String name = FileNameTools.removeExtension(entry
+                    .getSourceBasename());
+            if (!name.equals(lastName)) {
+                id++;
+            }
+            entry.setId(id);
+            lastName = name;
+        }
     }
 
 }

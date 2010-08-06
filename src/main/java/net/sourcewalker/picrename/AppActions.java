@@ -95,4 +95,10 @@ public class AppActions {
         modifyId(1);
     }
 
+    @Action
+    public void orderByDate() {
+        data.clearSelection();
+        data.orderByDate();
+    }
+
 }
