@@ -71,7 +71,7 @@ public class AppData implements TableModel {
         case 0:
             return "NR";
         case 1:
-            return "Description";
+            return "Description (click to edit)";
         case 2:
             return "Source filename";
         case 3:
