@@ -167,4 +167,13 @@ public class AppActions {
         }
     }
 
+    @Action(enabledProperty = "selectionNotEmpty")
+    public void removeSelected() {
+        List<FileEntry> selected = getSelectedEntries();
+        data.clearSelection();
+        for (FileEntry entry : selected) {
+            data.removeFileEntry(entry);
+        }
+    }
+
 }

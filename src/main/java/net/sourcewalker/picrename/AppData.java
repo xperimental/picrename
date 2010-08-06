@@ -144,6 +144,11 @@ public class AppData implements TableModel {
         }
     }
 
+    public void removeFileEntry(FileEntry entry) {
+        files.remove(entry);
+        fireDataChanged();
+    }
+
     void fireDataChanged() {
         for (TableModelListener l : tableListeners) {
             l.tableChanged(new TableModelEvent(this));
