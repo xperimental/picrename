@@ -10,7 +10,8 @@ public class FileNameFilter {
     static {
         FILTERS = new FileNameFilter[] { new FileNameFilter("^\\d+$", ""),
                 new FileNameFilter("^DSC\\d+$", ""),
-                new FileNameFilter("^IMG_\\d+$", "") };
+                new FileNameFilter("^IMG_\\d+$", ""),
+                new FileNameFilter("([^_]+_)?\\d{3}_?", "") };
     }
 
     public static String filterName(String name) {
@@ -30,11 +31,16 @@ public class FileNameFilter {
 
     public String apply(String input) {
         Matcher match = pattern.matcher(input);
-        if (match.matches()) {
+        if (match.find()) {
             return match.replaceAll(replacement);
         } else {
             return input;
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Filter: %s -> %s", pattern, replacement);
     }
 
 }
