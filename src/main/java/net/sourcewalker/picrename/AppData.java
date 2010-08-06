@@ -3,6 +3,8 @@ package net.sourcewalker.picrename;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,11 +21,13 @@ public class AppData implements TableModel {
     private String prefix;
     private int[] selection = new int[0];
     private PropertyChangeSupport propSupport = new PropertyChangeSupport(this);
+    private DateFormat dateFormat;
 
     public AppData() {
         tableListeners = new ArrayList<TableModelListener>();
         files = new ArrayList<FileEntry>();
         prefix = "";
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     }
 
     public void addPropertyChangeListener(String property,
@@ -57,7 +61,7 @@ public class AppData implements TableModel {
 
     @Override
     public int getColumnCount() {
-        return 4;
+        return 5;
     }
 
     @Override
@@ -70,6 +74,8 @@ public class AppData implements TableModel {
         case 2:
             return "Source filename";
         case 3:
+            return "Picture date";
+        case 4:
             return "Target path";
         default:
             return "UNKNOWN";
@@ -97,6 +103,9 @@ public class AppData implements TableModel {
         case 2:
             return entry.getSourceBasename();
         case 3:
+            return entry.getDateTaken() != null ? dateFormat.format(entry
+                    .getDateTaken()) : "";
+        case 4:
             return entry.getTargetPath(prefix);
         default:
             return "INVALID";
@@ -134,7 +143,7 @@ public class AppData implements TableModel {
         }
     }
 
-    private void fireDataChanged() {
+    void fireDataChanged() {
         for (TableModelListener l : tableListeners) {
             l.tableChanged(new TableModelEvent(this));
         }

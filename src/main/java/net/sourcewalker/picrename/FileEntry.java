@@ -1,6 +1,7 @@
 package net.sourcewalker.picrename;
 
 import java.io.File;
+import java.util.Date;
 
 public class FileEntry {
 
@@ -9,12 +10,30 @@ public class FileEntry {
     private int id;
     private File source;
     private String description;
+    private Date dateTaken;
 
-    public FileEntry(int id, File source) {
+    public FileEntry(final AppData data, int id, File source) {
         this.id = id;
         this.source = source;
         this.description = FileNameTools.removeExtension(source.getName());
         description = FileNameFilter.filterName(description);
+        startReadDate(data);
+    }
+
+    private void startReadDate(final AppData data) {
+        Thread dateReadThread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                ExifReader exif = new ExifReader(source);
+                if (exif.isSuccessful()) {
+                    dateTaken = exif.getDateTaken();
+                    data.fireDataChanged();
+                }
+            }
+        });
+        dateReadThread.setName("DateReader-" + getId());
+        dateReadThread.start();
     }
 
     public int getId() {
@@ -39,6 +58,14 @@ public class FileEntry {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Date getDateTaken() {
+        return dateTaken;
+    }
+
+    public void setDateTaken(Date dateTaken) {
+        this.dateTaken = dateTaken;
     }
 
     public String getTargetPath(String prefix) {

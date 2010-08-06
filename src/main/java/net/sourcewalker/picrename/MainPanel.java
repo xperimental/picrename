@@ -20,7 +20,7 @@ public class MainPanel extends JPanel implements ListSelectionListener,
         PropertyChangeListener {
 
     private static final long serialVersionUID = 2695052132894263047L;
-    private static final int[] MIN_WIDTHS = new int[] { 30, 150, 150, 300 };
+    private static final int[] MIN_WIDTHS = new int[] { 30, 150, 150, 100, 300 };
 
     private JTable fileTable;
     private JToolBar toolBar;

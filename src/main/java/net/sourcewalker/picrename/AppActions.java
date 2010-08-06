@@ -39,7 +39,7 @@ public class AppActions {
         if (id == -1) {
             id = data.nextId();
         }
-        FileEntry entry = new FileEntry(id, path);
+        FileEntry entry = new FileEntry(data, id, path);
         data.addFileEntry(entry);
     }
 
