@@ -161,6 +161,7 @@ public class AppData implements TableModel {
 
     public void clear() {
         files.clear();
+        clearSelection();
         fireDataChanged();
     }
 
@@ -184,7 +185,7 @@ public class AppData implements TableModel {
     }
 
     public void clearSelection() {
-        selection = new int[0];
+        setSelection(new int[0]);
     }
 
     public FileEntry getEntry(int index) {

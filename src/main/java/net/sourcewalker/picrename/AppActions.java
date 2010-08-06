@@ -2,6 +2,7 @@ package net.sourcewalker.picrename;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
@@ -30,6 +31,18 @@ public class AppActions {
     public AppActions(ApplicationContext context, AppData data) {
         this.data = data;
         res = context.getResourceMap(AppActions.class);
+
+        this.data.addPropertyChangeListener("selection",
+                new PropertyChangeListener() {
+
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        boolean oldValue = ((int[]) evt.getOldValue()).length > 0;
+                        boolean newValue = ((int[]) evt.getNewValue()).length > 0;
+                        propSupport.firePropertyChange("selectionNotEmpty",
+                                oldValue, newValue);
+                    }
+                });
     }
 
     public void addPropertyChangeListener(PropertyChangeListener l) {
@@ -103,7 +116,7 @@ public class AppActions {
         return result;
     }
 
-    @Action(enabledProperty = "listNotEmpty")
+    @Action(enabledProperty = "selectionNotEmpty")
     public void decreaseId() {
         modifyId(-1);
     }
@@ -123,7 +136,7 @@ public class AppActions {
         data.setSelection(indexes);
     }
 
-    @Action(enabledProperty = "listNotEmpty")
+    @Action(enabledProperty = "selectionNotEmpty")
     public void increaseId() {
         modifyId(1);
     }
@@ -136,6 +149,10 @@ public class AppActions {
 
     public boolean isListNotEmpty() {
         return data.getRowCount() > 0;
+    }
+
+    public boolean isSelectionNotEmpty() {
+        return data.getSelection().length > 0;
     }
 
     @Action(enabledProperty = "listNotEmpty", block = BlockingScope.APPLICATION)
