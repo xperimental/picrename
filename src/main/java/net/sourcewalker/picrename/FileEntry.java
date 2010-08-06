@@ -52,6 +52,10 @@ public class FileEntry {
         return source.getName();
     }
 
+    public void setSource(File value) {
+        source = value;
+    }
+
     public String getDescription() {
         return description;
     }

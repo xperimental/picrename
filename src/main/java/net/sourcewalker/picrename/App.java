@@ -18,7 +18,7 @@ public class App extends SingleFrameApplication {
     @Override
     protected void startup() {
         data = new AppData();
-        actions = getContext().getActionMap(new AppActions(data));
+        actions = getContext().getActionMap(new AppActions(getContext(), data));
 
         getMainFrame().setJMenuBar(getMenuBar());
         show(getMainPanel());

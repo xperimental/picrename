@@ -41,6 +41,8 @@ public class MainPanel extends JPanel implements ListSelectionListener,
         toolBar.add(actions.get("decreaseId"));
         toolBar.add(actions.get("orderByDate"));
         toolBar.addSeparator();
+        toolBar.add(actions.get("renameFiles"));
+        toolBar.addSeparator();
         toolBar.add(new PrefixToolbarItem(data));
         add(toolBar, BorderLayout.NORTH);
 

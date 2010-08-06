@@ -242,4 +242,8 @@ public class AppData implements TableModel {
         }
     }
 
+    public List<FileEntry> getList() {
+        return Collections.unmodifiableList(files);
+    }
+
 }

@@ -9,16 +9,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 import org.jdesktop.application.Action;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.ApplicationContext;
+import org.jdesktop.application.ResourceMap;
+import org.jdesktop.application.Task;
+import org.jdesktop.application.Task.BlockingScope;
 
 public class AppActions {
 
     private final AppData data;
+    private ResourceMap res;
     private PropertyChangeSupport propSupport = new PropertyChangeSupport(this);
 
-    public AppActions(AppData data) {
+    public AppActions(ApplicationContext context, AppData data) {
         this.data = data;
+        res = context.getResourceMap(AppActions.class);
+    }
 
     public void addPropertyChangeListener(PropertyChangeListener l) {
         propSupport.addPropertyChangeListener(l);
@@ -111,6 +120,18 @@ public class AppActions {
 
     public boolean isListNotEmpty() {
         return data.getRowCount() > 0;
+    }
+
+    @Action(enabledProperty = "listNotEmpty", block = BlockingScope.APPLICATION)
+    public Task<Boolean, String> renameFiles() {
+        int result = JOptionPane.showConfirmDialog(null,
+                res.getString("renameConfirmMessage"),
+                res.getString("Application.title"), JOptionPane.YES_NO_OPTION);
+        if (result != JOptionPane.YES_OPTION) {
+            return null;
+        } else {
+            return new RenameTask(Application.getInstance(), this, data);
+        }
     }
 
 }
