@@ -1,5 +1,7 @@
 package net.sourcewalker.picrename;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,11 +18,17 @@ public class AppData implements TableModel {
     private List<FileEntry> files;
     private String prefix;
     private int[] selection = new int[0];
+    private PropertyChangeSupport propSupport = new PropertyChangeSupport(this);
 
     public AppData() {
         tableListeners = new ArrayList<TableModelListener>();
         files = new ArrayList<FileEntry>();
         prefix = "";
+    }
+
+    public void addPropertyChangeListener(String property,
+            PropertyChangeListener l) {
+        propSupport.addPropertyChangeListener(property, l);
     }
 
     public String getPrefix() {
@@ -37,7 +45,9 @@ public class AppData implements TableModel {
     }
 
     public void setSelection(int[] value) {
+        int[] oldValue = selection;
         selection = value;
+        propSupport.firePropertyChange("selection", oldValue, value);
     }
 
     @Override
@@ -180,6 +190,10 @@ public class AppData implements TableModel {
             }
         });
         fireDataChanged();
+    }
+
+    public int getIndex(FileEntry search) {
+        return files.indexOf(search);
     }
 
 }

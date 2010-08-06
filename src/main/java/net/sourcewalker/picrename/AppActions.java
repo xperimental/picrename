@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JFileChooser;
@@ -62,7 +61,7 @@ public class AppActions {
         data.clear();
     }
 
-    private Collection<FileEntry> getSelectedEntries() {
+    private List<FileEntry> getSelectedEntries() {
         int[] selection = data.getSelection();
         List<FileEntry> result = new ArrayList<FileEntry>();
         for (int idx : selection) {
@@ -77,13 +76,18 @@ public class AppActions {
     }
 
     private void modifyId(int byValue) {
-        Collection<FileEntry> entries = getSelectedEntries();
+        List<FileEntry> entries = getSelectedEntries();
         for (FileEntry entry : entries) {
             if (entry.getId() + byValue > 0) {
                 entry.setId(entry.getId() + byValue);
             }
         }
         data.sortEntries();
+        int[] indexes = new int[entries.size()];
+        for (int i = 0; i < entries.size(); i++) {
+            indexes[i] = data.getIndex(entries.get(i));
+        }
+        data.setSelection(indexes);
     }
 
     @Action

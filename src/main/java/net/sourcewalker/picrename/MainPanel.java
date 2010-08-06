@@ -1,8 +1,11 @@
 package net.sourcewalker.picrename;
 
 import java.awt.BorderLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.ActionMap;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -13,7 +16,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-public class MainPanel extends JPanel implements ListSelectionListener {
+public class MainPanel extends JPanel implements ListSelectionListener,
+        PropertyChangeListener {
 
     private static final long serialVersionUID = 2695052132894263047L;
     private static final int[] MIN_WIDTHS = new int[] { 30, 150, 150, 300 };
@@ -21,6 +25,7 @@ public class MainPanel extends JPanel implements ListSelectionListener {
     private JTable fileTable;
     private JToolBar toolBar;
     private final AppData data;
+    private boolean settingSelection = false;
 
     public MainPanel(ActionMap actions, AppData data) {
         super();
@@ -48,6 +53,8 @@ public class MainPanel extends JPanel implements ListSelectionListener {
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         add(scroller, BorderLayout.CENTER);
+
+        data.addPropertyChangeListener("selection", this);
     }
 
     private void setMinWidths(TableColumnModel columnModel) {
@@ -59,13 +66,26 @@ public class MainPanel extends JPanel implements ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting()) {
+        if (!e.getValueIsAdjusting() && !settingSelection) {
             if (fileTable.getSelectedRowCount() > 0) {
                 data.setSelection(fileTable.getSelectedRows());
             } else {
                 data.clearSelection();
             }
         }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        int[] selection = (int[]) evt.getNewValue();
+        settingSelection = true;
+        DefaultListSelectionModel model = (DefaultListSelectionModel) fileTable
+                .getSelectionModel();
+        model.clearSelection();
+        for (int row : selection) {
+            model.addSelectionInterval(row, row);
+        }
+        settingSelection = false;
     }
 
 }
