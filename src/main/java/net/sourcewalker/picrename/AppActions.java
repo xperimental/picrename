@@ -44,6 +44,16 @@ public class AppActions {
                                 oldValue, newValue);
                     }
                 });
+        this.data.addPropertyChangeListener("files",
+                new PropertyChangeListener() {
+
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        boolean value = isListNotEmpty();
+                        propSupport.firePropertyChange("listNotEmpty", !value,
+                                value);
+                    }
+                });
     }
 
     public void addPropertyChangeListener(PropertyChangeListener l) {
@@ -90,14 +100,8 @@ public class AppActions {
         return true;
     }
 
-    private void addFile(File path) {
-        int id = data.getId(FileNameTools.removeExtension(path.getName()));
-        if (id == -1) {
-            id = data.nextId();
-        }
-        FileEntry entry = new FileEntry(data, id, path);
-        data.addFileEntry(entry);
-        propSupport.firePropertyChange("listNotEmpty", false, true);
+    protected void addFile(File path) {
+        data.addFile(path);
     }
 
     @Action
@@ -117,7 +121,6 @@ public class AppActions {
     @Action(enabledProperty = "listNotEmpty")
     public void clearList() {
         data.clear();
-        propSupport.firePropertyChange("listNotEmpty", true, false);
     }
 
     private List<FileEntry> getSelectedEntries() {

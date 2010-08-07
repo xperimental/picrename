@@ -158,6 +158,7 @@ public class AppData implements TableModel {
         for (TableModelListener l : tableListeners) {
             l.tableChanged(new TableModelEvent(this));
         }
+        propSupport.firePropertyChange("files", null, files);
     }
 
     private boolean fileExists(File path) {
@@ -255,6 +256,15 @@ public class AppData implements TableModel {
 
     public List<FileEntry> getList() {
         return Collections.unmodifiableList(files);
+    }
+
+    public void addFile(File path) {
+        int id = getId(FileNameTools.removeExtension(path.getName()));
+        if (id == -1) {
+            id = nextId();
+        }
+        FileEntry entry = new FileEntry(this, id, path);
+        addFileEntry(entry);
     }
 
 }

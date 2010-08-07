@@ -57,6 +57,8 @@ public class MainPanel extends JPanel implements ListSelectionListener,
                 .setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         fileTable.getSelectionModel().addListSelectionListener(this);
         fileTable.setRowHeight(ThumbnailWorker.THUMBNAIL_SIZE);
+        fileTable.setTransferHandler(new FileTransferHandler(data));
+        fileTable.setFillsViewportHeight(true);
         JScrollPane scroller = new JScrollPane(fileTable,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
