@@ -122,7 +122,7 @@ public class AppData implements TableModel {
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         FileEntry entry = files.get(rowIndex);
         switch (columnIndex) {
-        case 1:
+        case 2:
             entry.setDescription((String) aValue);
             break;
         default:
