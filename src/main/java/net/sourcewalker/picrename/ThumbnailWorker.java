@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -18,7 +19,18 @@ public class ThumbnailWorker {
 
     public static void enqueue(final FileEntry entry, final AppData data) {
         if (worker == null) {
-            worker = Executors.newFixedThreadPool(2);
+            worker = Executors.newFixedThreadPool(2, new ThreadFactory() {
+
+                private int number = 0;
+
+                @Override
+                public Thread newThread(Runnable r) {
+                    Thread t = new Thread(r, "ThumbnailWorker-" + (number++));
+                    t.setDaemon(true);
+                    t.setPriority(Thread.MIN_PRIORITY);
+                    return t;
+                }
+            });
         }
         worker.submit(new Runnable() {
 

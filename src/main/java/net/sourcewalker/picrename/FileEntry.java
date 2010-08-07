@@ -21,24 +21,11 @@ public class FileEntry {
         this.description = FileNameTools.removeExtension(source.getName());
         description = FileNameFilter.filterName(description);
         startReadDate(data);
+        createThumbnailImage(data);
     }
 
     private void startReadDate(final AppData data) {
-        Thread dateReadThread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                ExifReader exif = new ExifReader(source);
-                if (exif.isSuccessful()) {
-                    dateTaken = exif.getDateTaken();
-                    data.fireDataChanged();
-                }
-
-                createThumbnailImage(data);
-            }
-        });
-        dateReadThread.setName("DateReader-" + getId());
-        dateReadThread.start();
+        ExifWorker.enqueue(this, data);
     }
 
     protected void createThumbnailImage(final AppData data) {
