@@ -38,6 +38,8 @@ public class MainPanel extends JPanel implements ListSelectionListener,
         toolBar.add(actions.get("clearList"));
         toolBar.add(actions.get("removeSelected"));
         toolBar.addSeparator();
+        toolBar.add(actions.get("replaceString"));
+        toolBar.addSeparator();
         toolBar.add(actions.get("increaseId"));
         toolBar.add(actions.get("decreaseId"));
         toolBar.add(actions.get("orderByDate"));

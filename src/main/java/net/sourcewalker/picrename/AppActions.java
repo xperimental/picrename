@@ -176,4 +176,11 @@ public class AppActions {
         }
     }
 
+    @Action(enabledProperty = "listNotEmpty")
+    public void replaceString() {
+        App app = (App) Application.getInstance();
+        ReplaceDialog dlg = new ReplaceDialog(app, data);
+        dlg.setVisible(true);
+    }
+
 }
