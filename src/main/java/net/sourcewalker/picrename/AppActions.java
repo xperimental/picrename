@@ -21,9 +21,6 @@ import org.jdesktop.application.Task.BlockingScope;
 
 public class AppActions {
 
-    private static final String[] IGNORED_FILES = new String[] { "Thumbs.db",
-            "ehthumbs.db", ".DS_Store", "desktop.ini" };
-
     private final AppData data;
     private ResourceMap res;
     private PropertyChangeSupport propSupport = new PropertyChangeSupport(this);
@@ -69,7 +66,7 @@ public class AppActions {
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedDir = chooser.getSelectedFile();
             for (File child : selectedDir.listFiles()) {
-                if (isNotIgnored(child)) {
+                if (FileNameTools.isNotIgnored(child)) {
                     addFile(child);
                 }
             }
@@ -85,19 +82,6 @@ public class AppActions {
             chooser = new JFileChooser();
         }
         return chooser;
-    }
-
-    private boolean isNotIgnored(File child) {
-        if (!child.isFile()) {
-            return false;
-        }
-        String basename = child.getName();
-        for (String ignored : IGNORED_FILES) {
-            if (basename.equalsIgnoreCase(ignored)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     protected void addFile(File path) {

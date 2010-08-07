@@ -68,7 +68,7 @@ public class FileTransferHandler extends TransferHandler {
             for (File child : file.listFiles()) {
                 addFile(child);
             }
-        } else {
+        } else if (FileNameTools.isNotIgnored(file)) {
             SwingUtilities.invokeLater(new Runnable() {
 
                 @Override
