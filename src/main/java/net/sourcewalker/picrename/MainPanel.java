@@ -20,7 +20,8 @@ public class MainPanel extends JPanel implements ListSelectionListener,
         PropertyChangeListener {
 
     private static final long serialVersionUID = 2695052132894263047L;
-    private static final int[] MIN_WIDTHS = new int[] { 30, 150, 150, 100, 300 };
+    private static final int[] MIN_WIDTHS = new int[] {
+            ThumbnailWorker.THUMBNAIL_SIZE, 30, 150, 150, 100, 300 };
 
     private JTable fileTable;
     private JToolBar toolBar;
@@ -55,6 +56,7 @@ public class MainPanel extends JPanel implements ListSelectionListener,
         fileTable
                 .setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         fileTable.getSelectionModel().addListSelectionListener(this);
+        fileTable.setRowHeight(ThumbnailWorker.THUMBNAIL_SIZE);
         JScrollPane scroller = new JScrollPane(fileTable,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);

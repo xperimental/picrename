@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
@@ -62,21 +63,23 @@ public class AppData implements TableModel {
 
     @Override
     public int getColumnCount() {
-        return 5;
+        return 6;
     }
 
     @Override
     public String getColumnName(int columnIndex) {
         switch (columnIndex) {
         case 0:
-            return "NR";
+            return "Thumbnail";
         case 1:
-            return "Description (click to edit)";
+            return "NR";
         case 2:
-            return "Source filename";
+            return "Description (click to edit)";
         case 3:
-            return "Picture date";
+            return "Source filename";
         case 4:
+            return "Picture date";
+        case 5:
             return "Target path";
         default:
             return "UNKNOWN";
@@ -85,12 +88,12 @@ public class AppData implements TableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        return String.class;
+        return columnIndex == 0 ? ImageIcon.class : String.class;
     }
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex == 1;
+        return columnIndex == 2;
     }
 
     @Override
@@ -98,15 +101,17 @@ public class AppData implements TableModel {
         FileEntry entry = files.get(rowIndex);
         switch (columnIndex) {
         case 0:
-            return String.format("%03d", entry.getId());
+            return entry.getThumbnail();
         case 1:
-            return entry.getDescription();
+            return String.format("%03d", entry.getId());
         case 2:
-            return entry.getSourceBasename();
+            return entry.getDescription();
         case 3:
+            return entry.getSourceBasename();
+        case 4:
             return entry.getDateTaken() != null ? dateFormat.format(entry
                     .getDateTaken()) : "";
-        case 4:
+        case 5:
             return entry.getTargetPath(prefix);
         default:
             return "INVALID";

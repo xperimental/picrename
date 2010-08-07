@@ -3,6 +3,8 @@ package net.sourcewalker.picrename;
 import java.io.File;
 import java.util.Date;
 
+import javax.swing.ImageIcon;
+
 public class FileEntry {
 
     private static final String DELIMITER = "_";
@@ -11,6 +13,7 @@ public class FileEntry {
     private File source;
     private String description;
     private Date dateTaken;
+    private ImageIcon thumbnail;
 
     public FileEntry(final AppData data, int id, File source) {
         this.id = id;
@@ -30,10 +33,16 @@ public class FileEntry {
                     dateTaken = exif.getDateTaken();
                     data.fireDataChanged();
                 }
+
+                createThumbnailImage(data);
             }
         });
         dateReadThread.setName("DateReader-" + getId());
         dateReadThread.start();
+    }
+
+    protected void createThumbnailImage(final AppData data) {
+        ThumbnailWorker.enqueue(this, data);
     }
 
     public int getId() {
@@ -70,6 +79,14 @@ public class FileEntry {
 
     public void setDateTaken(Date dateTaken) {
         this.dateTaken = dateTaken;
+    }
+
+    public void setThumbnail(ImageIcon value) {
+        thumbnail = value;
+    }
+
+    public ImageIcon getThumbnail() {
+        return thumbnail;
     }
 
     public String getTargetPath(String prefix) {
