@@ -1,8 +1,12 @@
 package net.sourcewalker.picrename;
 
 import java.awt.BorderLayout;
+import java.awt.Desktop;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 
 import javax.swing.ActionMap;
 import javax.swing.DefaultListSelectionModel;
@@ -28,7 +32,7 @@ public class MainPanel extends JPanel implements ListSelectionListener,
     private final AppData data;
     private boolean settingSelection = false;
 
-    public MainPanel(ActionMap actions, AppData data) {
+    public MainPanel(ActionMap actions, final AppData data) {
         super();
         this.data = data;
         setLayout(new BorderLayout(5, 5));
@@ -59,6 +63,7 @@ public class MainPanel extends JPanel implements ListSelectionListener,
         fileTable.setRowHeight(ThumbnailWorker.THUMBNAIL_SIZE);
         fileTable.setTransferHandler(new FileTransferHandler(data));
         fileTable.setFillsViewportHeight(true);
+        fileTable.addMouseListener(new OpenPictureAdapter());
         JScrollPane scroller = new JScrollPane(fileTable,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -96,6 +101,28 @@ public class MainPanel extends JPanel implements ListSelectionListener,
             model.addSelectionInterval(row, row);
         }
         settingSelection = false;
+    }
+
+    private class OpenPictureAdapter extends MouseAdapter {
+
+        @Override
+        public void mouseClicked(MouseEvent evt) {
+            if (evt.getButton() == MouseEvent.BUTTON1
+                    && evt.getClickCount() == 2) {
+                int row = fileTable.getSelectedRow();
+                if (row != -1) {
+                    FileEntry entry = data.getEntry(row);
+                    if (Desktop.isDesktopSupported()) {
+                        try {
+                            Desktop.getDesktop().open(entry.getSource());
+                        } catch (IOException e) {
+                            System.out.println("Error while launching file: "
+                                    + e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }
