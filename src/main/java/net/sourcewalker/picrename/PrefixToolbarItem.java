@@ -4,6 +4,8 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,6 +21,8 @@ public class PrefixToolbarItem extends JPanel implements DocumentListener {
     private JLabel prefixLabel;
     private JTextField prefixField;
 
+    protected boolean changing = false;
+
     public PrefixToolbarItem(AppData data) {
         this.data = data;
         setLayout(new PrefixToolbarItemLayout());
@@ -31,6 +35,16 @@ public class PrefixToolbarItem extends JPanel implements DocumentListener {
         prefixField.setText(data.getPrefix());
         prefixField.getDocument().addDocumentListener(this);
         add(prefixField);
+
+        data.addPropertyChangeListener("prefix", new PropertyChangeListener() {
+
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (!changing) {
+                    prefixField.setText((String) evt.getNewValue());
+                }
+            }
+        });
     }
 
     @Override
@@ -39,8 +53,10 @@ public class PrefixToolbarItem extends JPanel implements DocumentListener {
     }
 
     private void prefixUpdated() {
+        changing = true;
         data.setPrefix(prefixField.getText());
         this.validate();
+        changing = false;
     }
 
     @Override

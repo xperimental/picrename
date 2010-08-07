@@ -42,7 +42,9 @@ public class AppData implements TableModel {
     }
 
     public void setPrefix(String value) {
+        String oldValue = prefix;
         prefix = value;
+        propSupport.firePropertyChange("prefix", oldValue, value);
         fireDataChanged();
     }
 
@@ -172,6 +174,7 @@ public class AppData implements TableModel {
 
     public void clear() {
         files.clear();
+        setPrefix("");
         clearSelection();
         fireDataChanged();
     }
