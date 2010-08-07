@@ -27,6 +27,7 @@ public class AppActions {
     private final AppData data;
     private ResourceMap res;
     private PropertyChangeSupport propSupport = new PropertyChangeSupport(this);
+    private String lastDir = null;
 
     public AppActions(ApplicationContext context, AppData data) {
         this.data = data;
@@ -52,7 +53,7 @@ public class AppActions {
     @Action
     public void addDirectory(ActionEvent evt) {
         Component parent = (Component) evt.getSource();
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = getFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int result = chooser.showOpenDialog(parent);
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -62,7 +63,18 @@ public class AppActions {
                     addFile(child);
                 }
             }
+            lastDir = chooser.getSelectedFile().getAbsolutePath();
         }
+    }
+
+    private JFileChooser getFileChooser() {
+        JFileChooser chooser;
+        if (lastDir != null) {
+            chooser = new JFileChooser(lastDir);
+        } else {
+            chooser = new JFileChooser();
+        }
+        return chooser;
     }
 
     private boolean isNotIgnored(File child) {
@@ -91,13 +103,14 @@ public class AppActions {
     @Action
     public void addFile(ActionEvent evt) {
         Component parent = (Component) evt.getSource();
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = getFileChooser();
         chooser.setMultiSelectionEnabled(true);
         int result = chooser.showOpenDialog(parent);
         if (result == JFileChooser.APPROVE_OPTION) {
             for (File selected : chooser.getSelectedFiles()) {
                 addFile(selected);
             }
+            lastDir = chooser.getSelectedFiles()[0].getAbsolutePath();
         }
     }
 
