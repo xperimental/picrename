@@ -20,8 +20,18 @@ public class App extends SingleFrameApplication {
         data = new AppData();
         actions = getContext().getActionMap(new AppActions(getContext(), data));
 
+        setVersionTitle();
+
         getMainFrame().setJMenuBar(getMenuBar());
         show(getMainPanel());
+    }
+
+    private void setVersionTitle() {
+        String version = App.class.getPackage().getImplementationVersion();
+        if (version == null) {
+            version = "NO-JAR-DEBUG";
+        }
+        getMainFrame().setTitle(getMainFrame().getTitle() + " " + version);
     }
 
     private JMenuBar getMenuBar() {
