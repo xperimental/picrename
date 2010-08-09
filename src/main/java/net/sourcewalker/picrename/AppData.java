@@ -24,12 +24,14 @@ public class AppData implements TableModel {
     private int[] selection = new int[0];
     private PropertyChangeSupport propSupport = new PropertyChangeSupport(this);
     private DateFormat dateFormat;
+    private ThumbnailWorker thumbnailWorker;
 
     public AppData() {
         tableListeners = new ArrayList<TableModelListener>();
         files = new ArrayList<FileEntry>();
         prefix = "";
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        thumbnailWorker = new ThumbnailWorker();
     }
 
     public void addPropertyChangeListener(String property,
@@ -268,6 +270,10 @@ public class AppData implements TableModel {
         }
         FileEntry entry = new FileEntry(this, id, path);
         addFileEntry(entry);
+    }
+
+    public ThumbnailWorker getThumbnailWorker() {
+        return thumbnailWorker;
     }
 
 }

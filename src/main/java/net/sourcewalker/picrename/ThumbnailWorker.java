@@ -3,6 +3,8 @@ package net.sourcewalker.picrename;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,28 +12,66 @@ import java.util.concurrent.ThreadFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
 
 public class ThumbnailWorker {
 
     public static final int THUMBNAIL_SIZE = 96;
 
-    private static ExecutorService worker;
+    private ExecutorService worker;
+    private int pending = 0;
+    private PropertyChangeSupport propSupport = new PropertyChangeSupport(this);
 
-    public static void enqueue(final FileEntry entry, final AppData data) {
-        if (worker == null) {
-            worker = Executors.newFixedThreadPool(2, new ThreadFactory() {
+    public void addPropertyChangeListener(String propertyName,
+            PropertyChangeListener l) {
+        propSupport.addPropertyChangeListener(propertyName, l);
+    }
 
-                private int number = 0;
+    public int getPending() {
+        return pending;
+    }
+
+    private void incrementPending() {
+        modifyPending(1);
+    }
+
+    private void decrementPending() {
+        modifyPending(-1);
+    }
+
+    private void modifyPending(final int value) {
+        synchronized (this) {
+            final int oldValue = pending;
+            final int newValue = pending + value;
+            pending = newValue;
+            SwingUtilities.invokeLater(new Runnable() {
 
                 @Override
-                public Thread newThread(Runnable r) {
-                    Thread t = new Thread(r, "ThumbnailWorker-" + (number++));
-                    t.setDaemon(true);
-                    t.setPriority(Thread.MIN_PRIORITY);
-                    return t;
+                public void run() {
+                    propSupport.firePropertyChange("pending", oldValue,
+                            newValue);
                 }
             });
         }
+    }
+
+    public ThumbnailWorker() {
+        worker = Executors.newFixedThreadPool(2, new ThreadFactory() {
+
+            private int number = 0;
+
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread t = new Thread(r, "ThumbnailWorker-" + (number++));
+                t.setDaemon(true);
+                t.setPriority(Thread.MIN_PRIORITY);
+                return t;
+            }
+        });
+    }
+
+    public void enqueue(final FileEntry entry, final AppData data) {
+        incrementPending();
         worker.submit(new Runnable() {
 
             @Override
@@ -68,6 +108,8 @@ public class ThumbnailWorker {
                     System.err
                             .println("Error reading image file for creating thumbnail: "
                                     + e.getMessage());
+                } finally {
+                    decrementPending();
                 }
             }
         });

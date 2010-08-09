@@ -29,7 +29,7 @@ public class FileEntry {
     }
 
     protected void createThumbnailImage(final AppData data) {
-        ThumbnailWorker.enqueue(this, data);
+        data.getThumbnailWorker().enqueue(this, data);
     }
 
     public int getId() {
