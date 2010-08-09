@@ -25,6 +25,7 @@ public class AppActions {
     private ResourceMap res;
     private PropertyChangeSupport propSupport = new PropertyChangeSupport(this);
     private String lastDir = null;
+    protected int pendingThumbs;
 
     public AppActions(ApplicationContext context, AppData data) {
         this.data = data;
@@ -49,8 +50,27 @@ public class AppActions {
                         boolean value = isListNotEmpty();
                         propSupport.firePropertyChange("listNotEmpty", !value,
                                 value);
+                        updateRenameReady();
                     }
                 });
+        this.data.getThumbnailWorker().addPropertyChangeListener("pending",
+                new PropertyChangeListener() {
+
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        pendingThumbs = (Integer) evt.getNewValue();
+                        updateRenameReady();
+                    }
+                });
+    }
+
+    public boolean isRenameReady() {
+        return isListNotEmpty() && (pendingThumbs == 0);
+    }
+
+    protected void updateRenameReady() {
+        boolean newValue = isRenameReady();
+        propSupport.firePropertyChange("renameReady", !newValue, newValue);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener l) {
@@ -155,7 +175,7 @@ public class AppActions {
         return data.getSelection().length > 0;
     }
 
-    @Action(enabledProperty = "listNotEmpty", block = BlockingScope.APPLICATION)
+    @Action(enabledProperty = "renameReady", block = BlockingScope.APPLICATION)
     public Task<Boolean, String> renameFiles() {
         int result = JOptionPane.showConfirmDialog(null,
                 res.getString("renameConfirmMessage"),
