@@ -69,6 +69,8 @@ public class MainPanel extends JPanel implements ListSelectionListener,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         add(scroller, BorderLayout.CENTER);
 
+        add(new StatusBar(data), BorderLayout.SOUTH);
+
         data.addPropertyChangeListener("selection", this);
     }
 
